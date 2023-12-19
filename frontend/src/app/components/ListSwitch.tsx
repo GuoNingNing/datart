@@ -69,6 +69,8 @@ const Container = styled.ul`
   padding: ${SPACE_LG} ${SPACE_MD} ${SPACE_MD};
 
   li {
+    float: left;
+    width: 50%;
     height: 36px;
     padding: ${SPACE} ${SPACE_LG};
     font-size: ${FONT_SIZE_SUBHEADING};
@@ -77,7 +79,6 @@ const Container = styled.ul`
     color: ${p => p.theme.textColor};
     cursor: pointer;
     border-radius: ${BORDER_RADIUS};
-
     .icon {
       margin-right: ${SPACE_XS};
       color: ${p => p.theme.textColorDisabled};

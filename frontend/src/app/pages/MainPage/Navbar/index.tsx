@@ -265,16 +265,16 @@ export function Navbar() {
         <Brand onClick={brandClick}>
           <img src={logo} alt="logo" />
         </Brand>
-        <Nav>
-          {navs.map(({ name, title, icon, isActive, module }) => {
-            return name !== 'toSub' || subNavs.length > 0 ? (
-              <Access
-                key={name}
-                type="module"
-                module={module}
-                level={PermissionLevels.Enable}
-              >
-                <Tooltip title={title} placement="right">
+        <TopNavContainer>
+          <Nav>
+            {navs.map(({ name, title, icon, isActive, module }) => {
+              return name !== 'toSub' || subNavs.length > 0 ? (
+                <Access
+                  key={name}
+                  type="module"
+                  module={module}
+                  level={PermissionLevels.Enable}
+                >
                   <NavItem
                     to={`/organizations/${orgId}/${
                       name === 'toSub' ? subNavs[0].name : name
@@ -282,109 +282,109 @@ export function Navbar() {
                     activeClassName="active"
                     {...(isActive && { isActive })}
                   >
-                    {icon}
+                    {icon}<span>{title}</span>
                   </NavItem>
-                </Tooltip>
-              </Access>
-            ) : null;
-          })}
-        </Nav>
-        <Toolbar>
-          <DownloadListPopup
-            polling={downloadPolling}
-            setPolling={onSetPolling}
-            onLoadTasks={loadTasks}
-            onDownloadFile={item => {
-              if (item.id) {
-                downloadFile(item.id).then(() => {
-                  dispatch(actions.setDownloadPolling(true));
-                });
-              }
-            }}
-          />
-          {systemInfo?.tenantManagementMode ===
-            TenantManagementMode.Platform && (
+                </Access>
+              ) : null;
+            })}
+          </Nav>
+          <Toolbar>
+            <DownloadListPopup
+              polling={downloadPolling}
+              setPolling={onSetPolling}
+              onLoadTasks={loadTasks}
+              onDownloadFile={item => {
+                if (item.id) {
+                  downloadFile(item.id).then(() => {
+                    dispatch(actions.setDownloadPolling(true));
+                  });
+                }
+              }}
+            />
+            {systemInfo?.tenantManagementMode ===
+              TenantManagementMode.Platform && (
+                <Popup
+                  content={<OrganizationList />}
+                  trigger={['click']}
+                  placement="rightBottom"
+                  onVisibleChange={organizationListVisibleChange}
+                >
+                  <li>
+                    <Tooltip title={t('nav.organization.title')} placement="right">
+                      <Avatar
+                        src={`${BASE_RESOURCE_URL}${currentOrganization?.avatar}`}
+                      >
+                        <BankFilled />
+                      </Avatar>
+                    </Tooltip>
+                  </li>
+                </Popup>
+              )}
             <Popup
-              content={<OrganizationList />}
-              trigger={['click']}
-              placement="rightBottom"
-              onVisibleChange={organizationListVisibleChange}
-            >
-              <li>
-                <Tooltip title={t('nav.organization.title')} placement="right">
-                  <Avatar
-                    src={`${BASE_RESOURCE_URL}${currentOrganization?.avatar}`}
+              content={
+                <Menu
+                  prefixCls="ant-dropdown-menu"
+                  selectable={false}
+                  selectedKeys={[lang!, themeKey]}
+                  onClick={userMenuSelect}
+                >
+                  <MenuListItem
+                    key="language"
+                    prefix={<GlobalOutlined className="icon" />}
+                    title={<p>{t('nav.account.switchLanguage.title')}</p>}
+                    sub
                   >
-                    <BankFilled />
-                  </Avatar>
-                </Tooltip>
-              </li>
-            </Popup>
-          )}
-          <Popup
-            content={
-              <Menu
-                prefixCls="ant-dropdown-menu"
-                selectable={false}
-                selectedKeys={[lang!, themeKey]}
-                onClick={userMenuSelect}
-              >
-                <MenuListItem
-                  key="language"
-                  prefix={<GlobalOutlined className="icon" />}
-                  title={<p>{t('nav.account.switchLanguage.title')}</p>}
-                  sub
-                >
-                  <MenuListItem key="zh">中文</MenuListItem>
-                  <MenuListItem key="en">English</MenuListItem>
-                </MenuListItem>
-                <MenuListItem
-                  key="theme"
-                  prefix={<SkinOutlined className="icon" />}
-                  title={<p>{t('nav.account.switchTheme.title')}</p>}
-                  sub
-                >
-                  <MenuListItem key="light" prefix={<ThemeBadge />}>
-                    {t('nav.account.switchTheme.light')}
+                    <MenuListItem key="zh">中文</MenuListItem>
+                    <MenuListItem key="en">English</MenuListItem>
                   </MenuListItem>
                   <MenuListItem
-                    key="dark"
-                    prefix={<ThemeBadge background={BLACK} />}
+                    key="theme"
+                    prefix={<SkinOutlined className="icon" />}
+                    title={<p>{t('nav.account.switchTheme.title')}</p>}
+                    sub
                   >
-                    {t('nav.account.switchTheme.dark')}
+                    <MenuListItem key="light" prefix={<ThemeBadge />}>
+                      {t('nav.account.switchTheme.light')}
+                    </MenuListItem>
+                    <MenuListItem
+                      key="dark"
+                      prefix={<ThemeBadge background={BLACK} />}
+                    >
+                      {t('nav.account.switchTheme.dark')}
+                    </MenuListItem>
                   </MenuListItem>
-                </MenuListItem>
-                <Menu.Divider />
-                <MenuListItem
-                  key="profile"
-                  prefix={<ProfileOutlined className="icon" />}
-                >
-                  <p>{t('nav.account.profile.title')}</p>
-                </MenuListItem>
-                <MenuListItem
-                  key="password"
-                  prefix={<FormOutlined className="icon" />}
-                >
-                  <p>{t('nav.account.changePassword.title')}</p>
-                </MenuListItem>
-                <MenuListItem
-                  key="logout"
-                  prefix={<ExportOutlined className="icon" />}
-                >
-                  <p>{t('nav.account.logout.title')}</p>
-                </MenuListItem>
-              </Menu>
-            }
-            trigger={['click']}
-            placement="rightBottom"
-          >
-            <li>
-              <Avatar src={`${BASE_RESOURCE_URL}${loggedInUser?.avatar}`}>
-                <UserOutlined />
-              </Avatar>
-            </li>
-          </Popup>
-        </Toolbar>
+                  <Menu.Divider />
+                  <MenuListItem
+                    key="profile"
+                    prefix={<ProfileOutlined className="icon" />}
+                  >
+                    <p>{t('nav.account.profile.title')}</p>
+                  </MenuListItem>
+                  <MenuListItem
+                    key="password"
+                    prefix={<FormOutlined className="icon" />}
+                  >
+                    <p>{t('nav.account.changePassword.title')}</p>
+                  </MenuListItem>
+                  <MenuListItem
+                    key="logout"
+                    prefix={<ExportOutlined className="icon" />}
+                  >
+                    <p>{t('nav.account.logout.title')}</p>
+                  </MenuListItem>
+                </Menu>
+              }
+              trigger={['click']}
+              placement="rightBottom"
+            >
+              <li>
+                <Avatar src={`${BASE_RESOURCE_URL}${loggedInUser?.avatar}`}>
+                  <UserOutlined />
+                </Avatar>
+              </li>
+            </Popup>
+          </Toolbar>
+        </TopNavContainer>
         <Profile visible={profileVisible} onCancel={hideProfile} />
         <ModifyPassword
           visible={modifyPasswordVisible}
@@ -412,12 +412,21 @@ export function Navbar() {
   );
 }
 
+const TopNavContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 80px;
+  padding: ${SPACE_MD} ${SPACE_LG};
+`;
 const MainNav = styled.div`
   z-index: ${LEVEL_10};
   display: flex;
-  flex-direction: column;
   flex-shrink: 0;
-  width: ${SPACE_TIMES(20)};
+  width: 100%;
+  height: 74px;
+  margin-bottom: 10px;
   background-color: ${p => p.theme.componentBackground};
   border-right: 1px solid ${p => p.theme.borderColorSplit};
 `;
@@ -427,8 +436,9 @@ const Brand = styled.div`
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  height: ${SPACE_TIMES(18)};
-  padding-top: ${SPACE_XS};
+  width: 100px;
+  height: 64px;
+  padding-top: 5px;
   cursor: pointer;
 
   img {
@@ -440,17 +450,21 @@ const Brand = styled.div`
 const Nav = styled.nav`
   display: flex;
   flex: 1;
-  flex-direction: column;
-  padding: 0 ${SPACE_LG};
+  width: 100%;
+  height: 64px;
+  padding: 5px ${SPACE_LG};
 `;
 
 const NavItem = styled(NavLink)`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  padding: ${SPACE_XS} 0;
-  margin: ${SPACE_XS} 0;
+  width: 120px;
+  height: 50px;
+  padding-left: 10px;
+  margin-left: 10px;
   color: ${p => p.theme.textColorDisabled};
+  text-align: center;
   border-radius: ${BORDER_RADIUS};
   transition: none;
 
@@ -468,24 +482,29 @@ const NavItem = styled(NavLink)`
   .anticon {
     font-size: ${FONT_SIZE_ICON_SM};
   }
+  span {
+    padding-left: 10px;
+  }
 `;
 
 const Toolbar = styled.ul`
   flex-shrink: 0;
   padding: 0 ${SPACE_LG};
-  margin-bottom: ${SPACE_LG};
+  padding: ${SPACE_LG} ${SPACE_MD} ${SPACE_MD};
 
   > li {
     display: flex;
     align-items: center;
     justify-content: center;
+    float: left;
+    width: 45px;
+    height: 45px;
     padding: ${SPACE_XS} 0;
     margin: ${SPACE_MD} 0;
     font-size: ${FONT_SIZE_ICON_SM};
     color: ${p => p.theme.textColorDisabled};
     cursor: pointer;
     border-radius: ${BORDER_RADIUS};
-
     &:hover {
       color: ${p => p.theme.primary};
       background-color: ${p => p.theme.bodyBackground};

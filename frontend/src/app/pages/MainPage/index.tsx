@@ -255,6 +255,6 @@ const AppContainer = styled.main`
   right: 0;
   bottom: 0;
   left: 0;
-  display: flex;
+  display: flow;
   background-color: ${p => p.theme.bodyBackground};
 `;
