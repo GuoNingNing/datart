@@ -27,6 +27,7 @@ public class OrderOperator extends ColumnOperator {
 
     private AggregateOperator.SqlOperator aggOperator;
 
+    private boolean isNullsLast = true;
     private SqlOperator operator;
 
     public enum SqlOperator {

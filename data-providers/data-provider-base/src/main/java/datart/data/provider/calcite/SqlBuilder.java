@@ -266,8 +266,13 @@ public class SqlBuilder {
                     new SqlNode[]{sqlNode}, SqlParserPos.ZERO);
         }
         if (operator.getOperator() == OrderOperator.SqlOperator.DESC) {
-            return new SqlBasicCall(SqlStdOperatorTable.DESC,
-                    new SqlNode[]{sqlNode}, SqlParserPos.ZERO);
+            // 修改这里，添加 DESC NULLS LAST 支持
+            SqlNode descNode = new SqlBasicCall(SqlStdOperatorTable.DESC, new SqlNode[]{sqlNode}, SqlParserPos.ZERO);
+            if (operator.isNullsLast()) {
+                return new SqlBasicCall(SqlStdOperatorTable.NULLS_LAST, new SqlNode[]{descNode}, SqlParserPos.ZERO);
+            } else {
+                return descNode;
+            }
         } else {
             return sqlNode;
         }
