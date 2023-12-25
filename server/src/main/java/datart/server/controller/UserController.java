@@ -139,9 +139,9 @@ public class UserController extends BaseController {
     @ApiOperation(value = "add User to organization")
     @PostMapping("/{orgId}/addUser")
     public ResponseData<User> addUser(@PathVariable String orgId, @Validated @RequestBody UserAddParam userAddParam) throws MessagingException, UnsupportedEncodingException {
-        if (!Application.getCurrMode().equals(TenantManagementMode.TEAM)) {
-            Exceptions.tr(PermissionDeniedException.class, "message.provider.execute.operation.denied");
-        }
+//        if (!Application.getCurrMode().equals(TenantManagementMode.TEAM)) {
+//            Exceptions.tr(PermissionDeniedException.class, "message.provider.execute.operation.denied");
+//        }
         return ResponseData.success(userService.addUserToOrg(userAddParam, orgId));
     }
 

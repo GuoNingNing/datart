@@ -160,7 +160,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         user.setActive(!sendMail);
         userMapper.insert(user);
         if (!sendMail) {
-            initUser(user);
+//            initUser(user);
             return true;
         }
         mailService.sendActiveMail(user);
@@ -185,7 +185,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (count != 1) {
             Exceptions.tr(BaseException.class, "message.user.active.fail", user.getUsername());
         }
-        initUser(user);
+//        initUser(user);
         log.info("User({}) activation success", user.getUsername());
         jwtToken.setPwdHash(user.getPassword().hashCode());
         jwtToken.setExp(null);

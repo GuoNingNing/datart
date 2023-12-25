@@ -21,6 +21,10 @@ package datart.security.base;
 public enum RoleType {
 
     /**
+     * 系统超级管理员
+     */
+    ADMIN,
+    /**
      * 组织拥有者,拥有组织最高权限
      */
     ORG_OWNER,
