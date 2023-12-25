@@ -69,7 +69,14 @@ public class OrgController extends BaseController {
     @ApiOperation(value = "create organization")
     @PostMapping
     public ResponseData<Organization> createOrganization(@Validated @RequestBody OrgCreateParam createParam) {
-        if (Application.getCurrMode().equals(TenantManagementMode.TEAM)) {
+        if (Application.getCurrMode().equals(TenantManagementMode.TEAM) ||
+                // 只有Admin才允许创建组织
+                !Application.getAdminName().equals(getCurrentUser().getUsername())
+        ) {
+            Exceptions.tr(PermissionDeniedException.class, "message.provider.execute.operation.denied");
+        }
+
+        if (!"admin".equals(getCurrentUser().getUsername())) {
             Exceptions.tr(PermissionDeniedException.class, "message.provider.execute.operation.denied");
         }
         return ResponseData.success(orgService.createOrganization(createParam));

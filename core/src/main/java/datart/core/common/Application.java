@@ -124,6 +124,10 @@ public class Application implements ApplicationContextAware {
         currMode = mode;
     }
 
+    public static String getAdminName() {
+        return Application.getProperty("datart.admin.username","admin");
+    }
+
     public static Boolean isInitialized() {
         if (initialized != null) {
             return initialized;
